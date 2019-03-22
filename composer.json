@@ -1,0 +1,21 @@
+{
+    "name": "nicolasbadey/elasticsearch-php-etl",
+    "description": "Add PHP class to you project for manage ETL, not only for Elasticsearch",
+    "type": "library",
+    "require": {
+        "elasticsearch/elasticsearch": "~6.1",
+        "symfony/console": "~4.0",
+        "pagerfanta/pagerfanta": "~2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nicolas Badey"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ElasticsearchETL\\": "src/"
+        }
+    }
+}
