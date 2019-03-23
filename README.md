@@ -3,7 +3,7 @@
 Add PHP class to you project for manage **ETL**, not only for Elasticsearch.
 This library is design to be use with symfony components or in symfony full stack frameworks, see the symfony section.
 
-As nothings is instanciable, tests are performs in the [symfony-elasticsearch-integration](https://github.com/NicolasBadey/symfony-elasticsearch-integration)  repository 
+For more convenient way, tests are performs in the [symfony-elasticsearch-integration](https://github.com/NicolasBadey/symfony-elasticsearch-integration)  repository 
 
 ## What is it ?
 
