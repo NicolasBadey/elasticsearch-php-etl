@@ -3,8 +3,8 @@
     "description": "Add PHP class to you project for manage ETL, not only for Elasticsearch",
     "type": "library",
     "require": {
-        "elasticsearch/elasticsearch": "~6.1",
-        "symfony/console": "~4.0",
+        "elasticsearch/elasticsearch": "^7.9",
+        "symfony/console": "^5.1",
         "pagerfanta/pagerfanta": "~2.0"
     },
     "license": "MIT",
