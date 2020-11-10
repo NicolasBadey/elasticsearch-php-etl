@@ -30,7 +30,7 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     /**
      * @var string
      *
-     * Index Name
+     * Env Name
      */
     private $env;
 
@@ -49,7 +49,7 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     public function __construct(ElasticsearchClientInterface $client, string $app_env)
     {
         $this->client = $client;
-        $this->env = $env;
+        $this->env = $app_env;
     }
 
     abstract public function getMappingProperties();
