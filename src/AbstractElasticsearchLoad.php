@@ -28,6 +28,13 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     private $index = '';
 
     /**
+     * @var string
+     *
+     * Index Name
+     */
+    private $env;
+
+    /**
      * @var bool
      *
      * Live mode allow indexing directly in the current alias' index if exists or by create a new index with an alias
@@ -39,27 +46,22 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     /**
      * AbstractElasticsearchLoad constructor.
      */
-    public function __construct(ElasticsearchClientInterface $client)
+    public function __construct(ElasticsearchClientInterface $client, string $app_env)
     {
         $this->client = $client;
+        $this->env = $env;
     }
 
     abstract public function getMappingProperties();
 
-    abstract public static function getAlias(): string;
+    abstract public function getAlias(): string;
 
     protected function getMapping(): array
     {
         return [
             'index' => $this->getIndex(),
-            'type' => static::getAlias(),
             'body' => [
-                static::getAlias() => [
-                    '_source' => [
-                        'enabled' => true,
-                    ],
-                    'properties' => $this->getMappingProperties(),
-                ],
+                'properties' => $this->getMappingProperties(),
             ],
         ];
     }
@@ -72,13 +74,13 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
                     [
                         'remove' => [
                             'index' => '*',
-                            'alias' => static::getAlias(),
+                            'alias' => $this->getAlias(),
                         ],
                     ],
                     [
                         'add' => [
                             'index' => $this->getIndex(),
-                            'alias' => static::getAlias(),
+                            'alias' => $this->getAlias(),
                         ],
                     ],
                 ],
@@ -93,7 +95,7 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
 
         foreach ($indices as $key => $existingIndex) {
             //only if it's not the current index and not a 3rd party index
-            if ($existingIndex !== $this->getIndex() && 0 === mb_strpos($existingIndex, static::getAlias())) {
+            if ($existingIndex !== $this->getIndex() && 0 === mb_strpos($existingIndex, $this->getAlias())) {
                 $this->client->indices()->delete([
                     'index' => $existingIndex,
                 ]);
@@ -111,9 +113,9 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
         if ('' === $this->index) {
             if (true === $this->live && true === $this->aliasExists()) {
                 //in this case we want to populate current live index if already exists
-                $this->index = $this->client->getIndexNameFromAlias(static::getAlias())[0];
+                $this->index = $this->client->getIndexNameFromAlias($this->getAlias())[0];
             } else {
-                $this->index = static::getAlias().'_'.(new \DateTime())->format('U');
+                $this->index = $this->getAlias().'_'.(new \DateTime())->format('U');
             }
         }
 
@@ -160,7 +162,7 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
             $paramsIndex['body'][] = [
                 'index' => [
                     '_index' => $this->getIndex(),
-                    '_type' => static::getAlias(),
+                   //'_type' => $this->getAlias(),
                     '_id' => $param['id'],
                 ],
             ];
@@ -175,8 +177,8 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     public function formatForIndex(array $param): array
     {
         $paramIndex = [
-            'index' => static::getAlias(),
-            'type' => static::getAlias(),
+            'index' => $this->getAlias(),
+            //'type' => $this->getAlias(),
             'id' => $param['id'],
         ];
 
@@ -207,7 +209,16 @@ abstract class AbstractElasticsearchLoad implements LoadInterface
     public function aliasExists(): bool
     {
         return $this->client->indices()->existsAlias([
-            'name' => static::getAlias(),
+            'name' => $this->getAlias(),
         ]);
+    }
+    
+    /**
+     * 
+     * @return type ElasticsearchClientInterface
+     */
+    public function getClient(): ElasticsearchClientInterface
+    {
+        return $this->client;
     }
 }

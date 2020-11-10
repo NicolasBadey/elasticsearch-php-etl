@@ -41,7 +41,7 @@ class ETL
      *
      * Be careful,with SQL, Limit statement become time consuming after 1000, test the good value depending ES load
      */
-    protected $maxPerPage;
+    protected $maxPerPage = 1000;
 
     /**
      * @return $this
@@ -71,12 +71,6 @@ class ETL
         $this->load = $load;
 
         return $this;
-    }
-
-    protected function __construct()
-    {
-        //Default values
-        $this->maxPerPage = 2000;
     }
 
     public static function create()
@@ -109,12 +103,12 @@ class ETL
         $nbPages = $pagerfanta->getNbPages();
 
         if (0 === $pagerfanta->getNbResults()) {
-            $output->writeln('no documents to index for '.$this->load::getAlias());
+            $output->writeln('no documents to index for '.$this->load->getAlias());
 
             return;
         }
 
-        $output->writeln('<info>'.$pagerfanta->getNbResults().' documents will be indexed in '.$this->load::getAlias().'</info>');
+        $output->writeln('<info>'.$pagerfanta->getNbResults().' documents will be indexed in '.$this->load->getAlias().'</info>');
 
         $progressBar = new ProgressBar($output, $pagerfanta->getNbPages());
         $progressBar->start();

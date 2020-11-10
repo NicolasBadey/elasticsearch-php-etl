@@ -42,5 +42,7 @@ abstract class AbstractETLCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->ETLBuilder->build()->run($output, $input->getOption('live'), $input->getArgument('ids'));
+        
+        return Command::SUCCESS;
     }
 }

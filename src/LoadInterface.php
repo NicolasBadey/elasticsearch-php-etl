@@ -20,7 +20,7 @@ interface LoadInterface
      *
      * return alias name
      */
-    public static function getAlias(): string;
+    public function getAlias(): string;
 
     /**
      * @param bool $live
@@ -50,4 +50,7 @@ interface LoadInterface
      * Insert one
      */
     public function singleLoad(array $data, bool $createIndexIfNotExists): array;
+    
+    public function getClient(): ElasticsearchClientInterface;
+
 }

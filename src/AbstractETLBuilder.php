@@ -46,4 +46,9 @@ abstract class AbstractETLBuilder implements BuilderInterface
 
         return $this->etl;
     }
+    
+    public function getLoad(): LoadInterface
+    {
+        return $this->load;        
+    }
 }
